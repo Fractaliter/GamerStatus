@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div>
-      <h1>LOL Leaderboard</h1>
+      <h1>LOL Leaderboard by KW</h1>
       <Leaderboard players={players} />
     </div>
   );

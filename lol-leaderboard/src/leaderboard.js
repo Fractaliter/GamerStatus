@@ -27,7 +27,7 @@ const Leaderboard = () => {
               score: player.leaguePoints,
             };
           }));
-  
+          playerData.sort((a, b) => b.score - a.score);
           setPlayers(playerData);
         } catch (error) {
           console.error('Error fetching data:', error.response ? error.response.data : error.message);

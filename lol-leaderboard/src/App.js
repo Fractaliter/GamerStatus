@@ -1,17 +1,16 @@
-import React from 'react';
-import Leaderboard from './leaderboard';
+import React, { useState, useEffect } from 'react';
+import Leaderboard from './leaderboard'; // Ensure this is your leaderboard component
+import SummonerInfo from './summonerInfo';
 
 function App() {
-  const players = [
-    { name: 'Player 1', score: 1500 },
-    { name: 'Player 2', score: 1400 },
-    { name: 'Player 3', score: 1300 }
-  ];
+  const [players, setPlayers] = useState([]);
+
 
   return (
     <div>
       <h1>LOL Leaderboard by KW</h1>
       <Leaderboard players={players} />
+      <SummonerInfo /> {/* Render the form and summoner info component */}
     </div>
   );
 }

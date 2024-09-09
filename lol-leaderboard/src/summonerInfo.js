@@ -1,64 +1,72 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { TextField, Button, Box, Typography, MenuItem } from '@mui/material';
 
 function SummonerInfo() {
   const [summonerName, setSummonerName] = useState('');
-  const [server, setServer] = useState('eun1'); // Default server
+  const [server, setServer] = useState('eun1');
   const [summoner, setSummoner] = useState(null);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const apiKey = process.env.REACT_APP_RIOT_API_KEY;
     try {
-        const response = await axios.get(`https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}?api_key=${apiKey}`);
-        setSummoner(response.data);
-        setError(null);
-      } catch (error) {
-        setSummoner(null);
-        if (error.response) {
-          setError(`Error: ${error.response.status} - ${error.response.data.status.message}`);
-        } else {
-          setError('Error fetching summoner info. Please check the summoner name or server.');
-        }
+      const apiKey = process.env.REACT_APP_RIOT_API_KEY;
+      const response = await axios.get(`https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}?api_key=${apiKey}`);
+      setSummoner(response.data);
+      setError(null);
+    } catch (error) {
+      setSummoner(null);
+      if (error.response) {
+        setError(`Error: ${error.response.status} - ${error.response.data.status.message}`);
+      } else {
+        setError('Error fetching summoner info. Please check the summoner name or server.');
       }
+    }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Summoner Name:
-          <input
-            type="text"
-            value={summonerName}
-            onChange={(e) => setSummonerName(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Server:
-          <select value={server} onChange={(e) => setServer(e.target.value)}>
-            <option value="eun1">EUNE</option>
-            <option value="euw1">EUW</option>
-            <option value="na1">NA</option>
-            <option value="kr">KR</option>
-            {/* Add more servers as needed */}
-          </select>
-        </label>
-        <button type="submit">Get Summoner Info</button>
-      </form>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
+      <TextField
+        label="Summoner Name"
+        value={summonerName}
+        onChange={(e) => setSummonerName(e.target.value)}
+        fullWidth
+        margin="normal"
+        required
+      />
+      <TextField
+        select
+        label="Server"
+        value={server}
+        onChange={(e) => setServer(e.target.value)}
+        fullWidth
+        margin="normal"
+        required
+      >
+        <MenuItem value="eun1">EUNE</MenuItem>
+        <MenuItem value="euw1">EUW</MenuItem>
+        <MenuItem value="na1">NA</MenuItem>
+        <MenuItem value="kr">KR</MenuItem>
+      </TextField>
+      <Button type="submit" variant="contained" color="primary" fullWidth>
+        Get Summoner Info
+      </Button>
 
       {summoner && (
-        <div>
-          <h2>{summoner.name}</h2>
-          <p>Level: {summoner.summonerLevel}</p>
-          <p>Profile Icon ID: {summoner.profileIconId}</p>
-        </div>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6">Summoner Info</Typography>
+          <Typography>Name: {summoner.name}</Typography>
+          <Typography>Level: {summoner.summonerLevel}</Typography>
+        </Box>
       )}
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+      {error && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
+      )}
+    </Box>
   );
 }
 
